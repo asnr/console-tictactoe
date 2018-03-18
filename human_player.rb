@@ -20,7 +20,6 @@ class HumanPlayer
   private
 
   def read_player_input
-    print "\n"
     print '> '
     gets.strip
   end

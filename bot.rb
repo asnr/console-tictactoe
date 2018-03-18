@@ -6,7 +6,7 @@ class Bot
   LOSE = -1
 
   def move_intro
-    "Bot's turn\n"
+    "Bot's move\n"
   end
 
   def choose(board)

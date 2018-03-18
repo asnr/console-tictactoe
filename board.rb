@@ -5,6 +5,10 @@ class Board
   STATE_PLAYER_ONE = :one
   STATE_PLAYER_TWO = :two
 
+  RESULT_WIN = :win
+  RESULT_DRAW = :draw
+  RESULT_LOSE = :lose
+
   def initialize(position_states: nil, player_to_state: nil)
     @rows = 3
     @columns = 3
@@ -51,10 +55,65 @@ class Board
   end
 
   def game_over?
-    false
+    three_consecutively?(STATE_PLAYER_ONE) ||
+      three_consecutively?(STATE_PLAYER_TWO) ||
+      full?
+  end
+
+  def result_for(player)
+    return nil unless game_over?
+    player_state = state_for_player(player)
+    result = if three_consecutively?(player_state)
+               RESULT_WIN
+             elsif full?
+               RESULT_DRAW
+             else
+               RESULT_LOSE
+             end
+    result
   end
 
   private
+
+  def three_consecutively?(state)
+    three_in_a_row?(state) ||
+      three_in_a_column?(state) ||
+      three_diagonally?(state)
+  end
+
+  def three_in_a_row?(state)
+    (0...@rows).any? do |row_index|
+      (0...@columns).all? do |column_index|
+        @position_states[row_index][column_index] == state
+      end
+    end
+  end
+
+  def three_in_a_column?(state)
+    (0...@columns).any? do |column_index|
+      (0...@rows).all? do |row_index|
+        @position_states[row_index][column_index] == state
+      end
+    end
+  end
+
+  def three_diagonally?(state)
+    down_diagonal =
+      [Point.new(0, 0), Point.new(1, 1), Point.new(2, 2)].all? do |point|
+        @position_states[point.row][point.column] == state
+      end
+    up_diagonal =
+      [Point.new(2, 0), Point.new(1, 1), Point.new(0, 2)].all? do |point|
+        @position_states[point.row][point.column] == state
+      end
+    down_diagonal || up_diagonal
+  end
+
+  def full?
+    any_available = false
+    each_available_point { |_| any_available = true }
+    !any_available
+  end
 
   def state_for_player(player)
     state = @player_to_state[player]
