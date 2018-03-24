@@ -6,4 +6,8 @@ class Point
     @row = row
     @column = column
   end
+
+  def ==(other)
+    @row == other.row && @column == other.column
+  end
 end

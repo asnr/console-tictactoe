@@ -11,7 +11,7 @@ class TicTacToe
     @board = Board.new
     @board_printer = BoardPrinter.new
     @player_one = HumanPlayer.new
-    @player_two = Bot.new
+    @player_two = Bot.new(opponent: @player_one)
   end
 
   def start

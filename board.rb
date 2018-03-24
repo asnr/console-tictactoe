@@ -65,15 +65,23 @@ class Board
     player_state = state_for_player(player)
     result = if three_consecutively?(player_state)
                RESULT_WIN
-             elsif full?
-               RESULT_DRAW
-             else
+             elsif three_consecutively?(other_player(player_state))
                RESULT_LOSE
+             else
+               RESULT_DRAW
              end
     result
   end
 
   private
+
+  def other_player(player_state)
+    if player_state == STATE_PLAYER_ONE
+      STATE_PLAYER_TWO
+    elsif player_state == STATE_PLAYER_TWO
+      STATE_PLAYER_ONE
+    end
+  end
 
   def three_consecutively?(state)
     three_in_a_row?(state) ||
